@@ -53,3 +53,47 @@ For TypeScript (`tsconfig.json`) projects:
 [Paths Configuration](../tsconfig.json)
 
 It is also possible to define multiple paths for various folders(such as `@/components`, `@/hooks`, etc.), but using `@/*` works very well because it is short enough so there is no need to configure multiple paths and it differs from other dependency modules so there is no confusion in what comes from `node_modules` and what is our source folder. That means that anything in the `src` folder can be accessed via `@`, e.g some file that lives in `src/components/MyComponent` can be accessed using `@/components/MyComponents`.
+
+## uv
+
+[uv](https://docs.astral.sh/uv/) is the Python package/project manager used by this
+repository (and by `create-awesome-python-app` scaffolds). It manages the virtual
+environment, dependencies, and tool versions:
+
+```bash
+uv sync          # create the venv and install all dependencies
+uv add <pkg>     # add a runtime dependency
+uv add --dev <pkg>  # add a development dependency
+uv run <cmd>     # run a command inside the project venv
+```
+
+Never use `pip install` directly — the lockfile (`uv.lock`) is the source of
+truth for the environment.
+
+## pyproject.toml
+
+`pyproject.toml` is the single configuration file for the Python side of the
+project. It declares:
+
+- **Project metadata** — name, version, description, authors
+- **Dependencies** — the runtime dependency list (managed by `uv add`)
+- **Tool configuration** — settings for linters/formatters/tests (e.g. `ruff`,
+  `pytest`) live under their own `[tool.*]` tables
+
+When adding a new dependency or a new tool, edit `pyproject.toml` (prefer
+`uv add` for dependencies so the lockfile stays in sync) rather than
+scattering config across ad-hoc files.
+
+## Environment variables (`.env`)
+
+Runtime configuration lives in environment variables, with a committed
+`.env.example` as the template:
+
+```bash
+cp .env.example .env   # create your local copy (`.env` is gitignored)
+```
+
+Never commit real secrets into `.env` — only the example file is tracked. To
+add a new variable: add it to `.env.example` with a one-line comment, read it
+in code via `os.environ.get("NAME")` (or your config loader), and document it
+in the docs.
