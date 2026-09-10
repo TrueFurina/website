@@ -41,7 +41,10 @@ jobs:
         run: npm install
 
       - name: Danger JS Action
-        uses: danger/danger-js@14.0.6
+        # Pinned to main: tag 14.0.6 ships FROM node:20-slim, whose transitive
+        # @yao-pkg/pkg requires node >=22 (docker build fails). Upstream main
+        # already uses FROM node:22-slim; revert to a tag once released.
+        uses: danger/danger-js@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DANGER_GITHUB_API_TOKEN: ${{ secrets.DANGER_GITHUB_API_TOKEN }}
