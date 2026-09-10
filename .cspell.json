@@ -136,6 +136,7 @@
     "uvicorn",
     "uvx",
     "vaul",
+    "venv",
     "vercel",
     "viewsets",
     "virtualenv",
